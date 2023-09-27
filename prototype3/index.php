@@ -68,6 +68,7 @@ if (isset($_GET['delete'])) {
                     <td><?= $Stagiaire->getId() ? $Stagiaire->getId() : "null" ?></td>
                     <td><?= $Stagiaire->getNom() ? $Stagiaire->getNom() : "null"; ?></td>
                     <td><?= $Stagiaire->getPrenom() ? $Stagiaire->getPrenom() : "null"; ?></td>
+                    <td><?= $Stagiaire->getVille() ? $Stagiaire->getVille() : "null"; ?></td>
                     <td>
                         <a href="edit.php?id=<?= $Stagiaire->getId() ?>" class="btn btn-primary">Edit</a>
                         <a href="?delete=<?= $Stagiaire->getId() ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this Stagiaire?')">Delete</a>

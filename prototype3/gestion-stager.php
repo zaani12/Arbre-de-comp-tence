@@ -3,6 +3,7 @@
 
 
 include './stager.php';
+include 'viile.php';
 
 class GestionStagiaire
 {
@@ -39,7 +40,10 @@ class GestionStagiaire
 
     public function getStagiaire(){
 
-        $sql = "SELECT personne.id, personne.Nom, personne.prenom, ville.nom_ville FROM personne INNER JOIN ville ON personne.id = ville.id;";
+        $sql = "SELECT personne.id, personne.nom, personne.prenom, ville.ville
+        FROM personne
+        INNER JOIN ville ON personne.id = ville.id_personne;
+        ";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
@@ -49,9 +53,14 @@ class GestionStagiaire
 
         foreach($StagiairesData as $StagiaireData){
             $stager = new stager;
+            $ville = new ville;
             $stager->setId( $StagiaireData['id']);
             $stager->setnom($StagiaireData['nom']);
             $stager->setprenom($StagiaireData['prenom']);
+            $stager->setVille($StagiaireData['ville']);
+            $Stagiaire->setVille($Villes->getVille());
+
+           
             array_push($Stagiaires, $stager);
         }
 
@@ -60,6 +69,16 @@ class GestionStagiaire
 
 
     }
+    public function getVilles()
+    {
+        $sql = "SELECT ville_id, Ville FROM `ville`;";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $VillesData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // print_r($VillesData);
+        return $VillesData;
+    }
+
 
     public function createStagiaire($nom, $prenom)
     {

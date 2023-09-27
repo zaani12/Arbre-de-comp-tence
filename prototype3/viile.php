@@ -1,24 +1,24 @@
 <?php
 class ville{
     private $id;
-    private $villeName;
+    private $ville;
 
-    function getId()
+    // function getId()
+    // {
+    //     return $this->id;
+    // }
+    // function setId($id)
+    // {
+    //     return $this->id = $id;
+    // }
+
+    function getVille()
     {
-        return $this->id;
-    }
-    function setId($id)
-    {
-        return $this->id = $id;
+        return $this->ville;
     }
 
-    function getvilleName()
+    function setVille($ville)
     {
-        return $this->villeName;
-    }
-
-    function setvilleName($villeName)
-    {
-        $this->villeName = $villeName;
+        $this->ville = $ville;
     }
 }
