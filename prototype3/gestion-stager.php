@@ -37,11 +37,9 @@ class GestionStagiaire
         }
     }
 
-
-
     public function getStagiaire(){
 
-        $sql = "SELECT * FROM personne";
+        $sql = "SELECT personne.id, personne.Nom, personne.prenom, ville.nom_ville FROM personne INNER JOIN ville ON personne.id = ville.id;";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
@@ -58,6 +56,8 @@ class GestionStagiaire
         }
 
         return $Stagiaires;
+
+
 
     }
 
