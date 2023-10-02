@@ -3,7 +3,7 @@
 
 
 include './stager.php';
-include 'viile.php';
+include './viile.php';
 
 class GestionStagiaire
 {
@@ -37,6 +37,7 @@ class GestionStagiaire
             echo "Failed to connect with MySQL: " . $e->getMessage();
         }
     }
+    
 
     public function getStagiaire(){
 
@@ -52,15 +53,13 @@ class GestionStagiaire
         $Stagiaires = array();
 
         foreach($StagiairesData as $StagiaireData){
-            $stager = new stager;
-            $ville = new ville;
+            $stager = new stager();
+            $villes = new ville;
             $stager->setId( $StagiaireData['id']);
             $stager->setnom($StagiaireData['nom']);
             $stager->setprenom($StagiaireData['prenom']);
-            $stager->setVille($StagiaireData['ville']);
-            $Stagiaire->setVille($Villes->getVille());
-
-           
+            $villes->setVille($StagiaireData['ville']);
+            $stager->setVille($villes->getVille());
             array_push($Stagiaires, $stager);
         }
 
@@ -80,33 +79,43 @@ class GestionStagiaire
     }
 
 
-    public function createStagiaire($nom, $prenom)
-    {
+    public function createStagiaire($Gestions)
+    {    $nom = $Gestions->getNom();
+        $CNE = $Gestions->getCNE();
+        $ville = $Gestions->getVille();
+
         try {
+            // Start a database transaction.
+            $this->pdo->beginTransaction();
+    
+            // Insert data into the personne table.
             $sql = "INSERT INTO personne (nom, prenom) VALUES (?, ?)";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([$nom, $prenom]);
+    
+            // Get the last insert ID from the personne table.
+            $personneId = $this->pdo->lastInsertId();
+    
+            // Insert data into the ville table.
+            $sql = "INSERT INTO ville (ville) VALUES (?)";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$ville]);
+    
+            // Commit the database transaction.
+            $this->pdo->commit();
+    
             return true;
         } catch (PDOException $e) {
+            // Roll back the database transaction.
+            $this->pdo->rollback();
+    
             header("Location: index.php");
             echo "Failed to create Stagiaire: " . $e->getMessage();
             return false;
+    
         }
     }
-
-    public function updateStagiaire($id, $nom, $prenom)
-    {
-        try {
-            $sql = "UPDATE personne SET nom = ?, prenom = ? WHERE id = ?";
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$nom, $prenom, $id]);
-            return true;
-        } catch (PDOException $e) {
-            echo "Failed to update Stagiaire: " . $e->getMessage();
-            return false;
-        }
-    }
-
+    
     public function deleteStagiaire($id)
     {
         try {
