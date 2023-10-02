@@ -59,10 +59,11 @@ if (isset($_GET['delete'])) {
                 <th>ID</th>
                 <th>Nom</th>
                 <th>Prénom</th>
+                <th>ville</th>
                 <th>Actions</th>
             </tr>
             <?php
-            foreach ($StagiaresData as $Stagiaire) {
+            foreach ($StagiaresData as $Stagiaire ) {
             ?>
                 <tr>
                     <td><?= $Stagiaire->getId() ? $Stagiaire->getId() : "null" ?></td>
@@ -86,6 +87,10 @@ if (isset($_GET['delete'])) {
             <div class="form-group">
                 <label for="prenom">Prénom:</label>
                 <input type="text" id="prenom" name="prenom" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="ville">ville:</label>
+                <input type="text" id="ville" name="ville" class="form-control" required>
             </div>
             <button type="submit" name="create" class="btn btn-success">Create</button>
         </form>

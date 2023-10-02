@@ -35,5 +35,14 @@ class stager
     {
        return $this->prenom = $prenom;
     }
+    public function getVille()
+    {
+        return $this->Ville;
+    }
+    public function setVille($Ville)
+    {
+        $this->Ville = $Ville;
+    }
+
    }
 ?>
