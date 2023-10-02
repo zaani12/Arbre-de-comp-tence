@@ -3,7 +3,7 @@
 
 
 include './stager.php';
-include 'viile.php';
+include './ville.php';
 
 class GestionStagiaire
 {
@@ -57,8 +57,8 @@ class GestionStagiaire
             $stager->setId( $StagiaireData['id']);
             $stager->setnom($StagiaireData['nom']);
             $stager->setprenom($StagiaireData['prenom']);
+            $stager->setVille($Villes->getVille());
             $stager->setVille($StagiaireData['ville']);
-            $Stagiaire->setVille($Villes->getVille());
 
            
             array_push($Stagiaires, $stager);
