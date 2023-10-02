@@ -3,11 +3,7 @@
 
 
 include './stager.php';
-<<<<<<< HEAD
 include './ville.php';
-=======
-include './viile.php';
->>>>>>> fc7c9315fef9c1ccbd699bb55e2ffb04447f3cf6
 
 class GestionStagiaire
 {
@@ -16,7 +12,7 @@ class GestionStagiaire
     private $serverName = "localhost";
     private $username = "root";
     private $password = "";
-    private $dbname  = "prototype1";
+    private $dbname  = "arbre de comptence";
     private $charset = "utf8mb4";
     private $pdo;
 
@@ -26,7 +22,7 @@ class GestionStagiaire
         $this->serverName = "localhost";
         $this->username = "root";
         $this->password = "";
-        $this->dbname = "prototype1";
+        $this->dbname = "arbre de comptence";
         $this->charset = "utf8mb4";
 
         // Connect to the database 
@@ -45,9 +41,7 @@ class GestionStagiaire
 
     public function getStagiaire(){
 
-        $sql = "SELECT personne.id, personne.nom, personne.prenom, ville.ville
-        FROM personne
-        INNER JOIN ville ON personne.id = ville.id_personne;
+        $sql = "SELECT personne.id, personne.nom, personne.prenom, personne.ville_id, ville.ville FROM personne INNER JOIN ville ON personne.ville_id = ville.id;
         ";
 
         $stmt = $this->pdo->prepare($sql);
@@ -62,15 +56,10 @@ class GestionStagiaire
             $stager->setId( $StagiaireData['id']);
             $stager->setnom($StagiaireData['nom']);
             $stager->setprenom($StagiaireData['prenom']);
-<<<<<<< HEAD
-            $stager->setVille($Villes->getVille());
+            $stager->setVille($villes->getVille());
             $stager->setVille($StagiaireData['ville']);
 
            
-=======
-            $villes->setVille($StagiaireData['ville']);
-            $stager->setVille($villes->getVille());
->>>>>>> fc7c9315fef9c1ccbd699bb55e2ffb04447f3cf6
             array_push($Stagiaires, $stager);
         }
 
@@ -81,7 +70,7 @@ class GestionStagiaire
     }
     public function getVilles()
     {
-        $sql = "SELECT ville_id, Ville FROM `ville`;";
+        $sql = "SELECT id, nom_Ville FROM `ville`;";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         $VillesData = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -91,10 +80,11 @@ class GestionStagiaire
 
 
     public function createStagiaire($Gestions)
-    {    $nom = $Gestions->getNom();
-        $CNE = $Gestions->getCNE();
+    {   
+        $nom = $Gestions->getNom();
+        $prenom = $Gestions->getPrenom();
         $ville = $Gestions->getVille();
-
+    
         try {
             // Start a database transaction.
             $this->pdo->beginTransaction();
@@ -108,9 +98,9 @@ class GestionStagiaire
             $personneId = $this->pdo->lastInsertId();
     
             // Insert data into the ville table.
-            $sql = "INSERT INTO ville (ville) VALUES (?)";
+            $sql = "INSERT INTO ville (id_personne, nom_ville) VALUES (?, ?)";
             $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$ville]);
+            $stmt->execute([$personneId, $ville]);
     
             // Commit the database transaction.
             $this->pdo->commit();
@@ -126,6 +116,7 @@ class GestionStagiaire
     
         }
     }
+    
     
     public function deleteStagiaire($id)
     {
@@ -148,10 +139,13 @@ class GestionStagiaire
             $StagiaireData = $stmt->fetch(PDO::FETCH_ASSOC);
     
             if ($StagiaireData) {
-                $stager = new stager;
-                $stager->setId($StagiaireData['id']);
-                $stager->setNom($StagiaireData['nom']);
-                $stager->setPrenom($StagiaireData['prenom']);
+                $stager = new stager();
+                $villes = new ville;
+                $stager->setId( $StagiaireData['id']);
+                $stager->setnom($StagiaireData['nom']);
+                $stager->setprenom($StagiaireData['prenom']);
+                $stager->setVille($villes->getVille());
+                // $stager->setVille($StagiaireData['nom_ville']);
                 return $stager;
             } else {
                 return null; // Stagiaire with the given ID not found
@@ -162,7 +156,53 @@ class GestionStagiaire
         }
     }
     
+    public function updateStagiaire($id, $nom, $prenom) {
+        try {
+            // Update the 'personne' table
+            $sqlPersonne = "UPDATE personne SET nom=:nom, prenom=:prenom WHERE id=:id";
+            $stmtPersonne = $this->pdo->prepare($sqlPersonne);
+            $stmtPersonne->bindParam(':nom', $nom, PDO::PARAM_STR);
+            $stmtPersonne->bindParam(':prenom', $prenom, PDO::PARAM_STR);
+            $stmtPersonne->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmtPersonne->execute();
+    
+            // Update the 'ville' table
+            $sqlVille = "UPDATE ville SET nom_ville=:ville WHERE id_personne=:id";
+            $stmtVille = $this->pdo->prepare($sqlVille);
+            $stmtVille->bindParam(':ville', $ville, PDO::PARAM_STR);
+            $stmtVille->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmtVille->execute();
+    
+            return true;
+        } catch (PDOException $e) {
+            echo "Failed to update Stagiaire: " . $e->getMessage();
+            return false;
+        }
+    }
+    public function getVillesData(){
+        $sql = "SELECT * FROM ville ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$id]);
+        $StagiaireData = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stager->setVille($villes->getVille());
+        $stager->setVille($StagiaireData['ville']);
 
+        foreach($StagiairesData as $StagiaireData){
+            $villes = new ville;
+            $stager->setVille($villes->getVille());
+            $stager->setVille($StagiaireData['ville']);
+
+           
+            array_push($Stagiaires, $stager);
+        }
+
+        return $Stagiaires;
+        
+    
+     }
+    
+    
+    
 
 }
 

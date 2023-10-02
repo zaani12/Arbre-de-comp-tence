@@ -11,8 +11,9 @@ if (isset($_GET['id'])) {
         if (isset($_POST['update'])) {
             $newNom = $_POST['nom'];
             $newPrenom = $_POST['prenom'];
+            $newVille = $_POST['ville'];
 
-            if ($GestionStagiaire->updateStagiaire($id, $newNom, $newPrenom)) {
+            if ($GestionStagiaire->updateStagiare($id, $newNom, $newPrenom, $newVille)) {
                 echo "Stagiaire updated successfully!";
                 header("Location: index.php");
             } else {
@@ -41,6 +42,10 @@ if (isset($_GET['id'])) {
                     <div class="form-group">
                         <label for="prenom">Prénom:</label>
                         <input type="text" id="prenom" name="prenom" value="<?= $stagiaire->getPrenom() ?>" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ville">ville:</label>
+                        <input type="text" id="ville" name="ville" value="<?= $stagiaire->getPrenom() ?>" class="form-control" required>
                     </div>
                     <button type="submit" name="update" class="btn btn-primary">Update</button>
                 </form>

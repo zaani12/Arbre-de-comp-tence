@@ -90,8 +90,13 @@ if (isset($_GET['delete'])) {
             </div>
             <div class="form-group">
                 <label for="ville">ville:</label>
-                <input type="text" id="ville" name="ville" class="form-control" required>
-            </div>
+            <select name="ville">
+                <?php foreach ($getVillesData as $getVillesData) {  ?>
+                    <option value="<?= $villes->getVille() ? $villes->getVille() : "null"; ?>">
+                        <?php echo $villes->getVille() ?>
+                    </option>
+                <?php } ?>
+            </select>   </div>
             <button type="submit" name="create" class="btn btn-success">Create</button>
         </form>
     </div>
