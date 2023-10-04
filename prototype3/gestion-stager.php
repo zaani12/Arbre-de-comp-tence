@@ -2,8 +2,8 @@
 
 
 
-include './stager.php';
-include './ville.php';
+include_once './stager.php';
+include_once './ville.php';
 
 class GestionStagiaire
 {
@@ -48,17 +48,17 @@ class GestionStagiaire
         $stmt->execute();
         $StagiairesData = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $Stagiaires = array();
+        $Stagiaires = [];
 
         foreach($StagiairesData as $StagiaireData){
-            $stager = new stager();
+            $stager = new stager;
             $villes = new ville;
-            $stager->setId( $StagiaireData['id']);
+            $stager->setId($StagiaireData['id']);
             $stager->setnom($StagiaireData['nom']);
             $stager->setprenom($StagiaireData['prenom']);
-            $stager->setVille($villes->getVille());
-            $stager->setVille($StagiaireData['ville']);
-
+            $stager->setVilleId($StagiaireData['ville_id']);
+            // $stager->setVilleId($villes->getVille());
+            // $stager->setVilleId($StagiaireData['ville']);
            
             array_push($Stagiaires, $stager);
         }
@@ -68,14 +68,22 @@ class GestionStagiaire
 
 
     }
-    public function getVilles()
+    public function getVillesId()
     {
-        $sql = "SELECT id, nom_Ville FROM `ville`;";
+        $sql = "SELECT id FROM `ville`";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
-        $VillesData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        // print_r($VillesData);
-        return $VillesData;
+        $StagiairesVilles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $getVillesIds = [];
+        foreach($StagiairesVilles as $StagiairesVille){
+            $Ville = new stager;
+            $Ville->setId($StagiairesVille['id']);
+        
+            array_push($getVillesIds, $Ville);
+        }
+
+
+        return $getVillesIds;
     }
 
 
@@ -144,7 +152,7 @@ class GestionStagiaire
                 $stager->setId( $StagiaireData['id']);
                 $stager->setnom($StagiaireData['nom']);
                 $stager->setprenom($StagiaireData['prenom']);
-                $stager->setVille($villes->getVille());
+                $stager->setVilleId($villes->getVille());
                 // $stager->setVille($StagiaireData['nom_ville']);
                 return $stager;
             } else {
@@ -180,23 +188,23 @@ class GestionStagiaire
         }
     }
     public function getVillesData(){
+        $villes = new ville;
         $sql = "SELECT * FROM ville ";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([$id]);
-        $StagiaireData = $stmt->fetch(PDO::FETCH_ASSOC);
-        $stager->setVille($villes->getVille());
-        $stager->setVille($StagiaireData['ville']);
+        $stmt->execute();
+        $VillesData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        foreach($StagiairesData as $StagiaireData){
-            $villes = new ville;
-            $stager->setVille($villes->getVille());
-            $stager->setVille($StagiaireData['ville']);
+
+        foreach($VillesData as $VillesData){
+          ;
+            $villes->setVilleId($villes->getVille());
+            $villes->setVilleId($VillesData['ville']);
 
            
-            array_push($Stagiaires, $stager);
+            array_push($VillesData, $villes);
         }
 
-        return $Stagiaires;
+        return $villes;
         
     
      }

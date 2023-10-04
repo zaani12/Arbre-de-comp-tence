@@ -5,6 +5,7 @@ class stager
     private $id;
     private $nom;
     private $prenom;
+    private $Ville_id;
 
     function getId()
     {
@@ -35,13 +36,16 @@ class stager
     {
        return $this->prenom = $prenom;
     }
-    public function getVille()
+
+
+
+    public function getVilleId()
     {
-        return $this->Ville;
+        return $this->Ville_id;
     }
-    public function setVille($Ville)
+    public function setVilleId($Ville_id)
     {
-        $this->Ville = $Ville;
+        $this->Ville_id = $Ville_id;
     }
 
    }

@@ -19,6 +19,6 @@ class ville{
 
     function setVille($ville)
     {
-        $this->ville = $ville;
+       return $this->ville = $ville;
     }
 }

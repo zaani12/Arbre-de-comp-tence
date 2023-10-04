@@ -1,10 +1,20 @@
 <?php
 // Include the necessary classes and initialize the database connection
 // include './stager.php';
-include "./gestion-stager.php";
+include_once "./gestion-stager.php";
+include_once "./gestionVille.php";
+// include "./ville.php";
 
 $GestionStagiaire = new GestionStagiaire();
 $StagiaresData = $GestionStagiaire->getStagiaire();
+
+
+
+
+
+
+$GestionVille = new GestionVille;
+$VillesIds =$GestionVille->getVillesId();
 
 // Create a new Stagiaire
 if (isset($_POST['create'])) {
@@ -68,8 +78,8 @@ if (isset($_GET['delete'])) {
                 <tr>
                     <td><?= $Stagiaire->getId() ? $Stagiaire->getId() : "null" ?></td>
                     <td><?= $Stagiaire->getNom() ? $Stagiaire->getNom() : "null"; ?></td>
-                    <td><?= $Stagiaire->getPrenom() ? $Stagiaire->getPrenom() : "null"; ?></td>
-                    <td><?= $Stagiaire->getVille() ? $Stagiaire->getVille() : "null"; ?></td>
+                    <td><?= $Stagiaire->getprenom() ? $Stagiaire->getprenom() : "null"; ?></td>
+                    <td><?= $GestionVille->getVilleById($Stagiaire->getVilleId()) ? $GestionVille->getVilleById($Stagiaire->getVilleId()) : "null"; ?></td>
                     <td>
                         <a href="edit.php?id=<?= $Stagiaire->getId() ?>" class="btn btn-primary">Edit</a>
                         <a href="?delete=<?= $Stagiaire->getId() ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this Stagiaire?')">Delete</a>
@@ -91,9 +101,10 @@ if (isset($_GET['delete'])) {
             <div class="form-group">
                 <label for="ville">ville:</label>
             <select name="ville">
-                <?php foreach ($getVillesData as $getVillesData) {  ?>
-                    <option value="<?= $villes->getVille() ? $villes->getVille() : "null"; ?>">
-                        <?php echo $villes->getVille() ?>
+            
+                <?php foreach ($VillesIds as $VilleId ) {  ?>
+                    <option value="<?= $VilleId->getId() ? $VilleId->getId() : "null"; ?>">
+                        <?php echo $GestionVille->getVilleById($VilleId->getId()) ?>
                     </option>
                 <?php } ?>
             </select>   </div>
