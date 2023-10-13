@@ -21,6 +21,3 @@ class City
         return $this->city_name;
     }
 }
-
-//idCity
-//city_name

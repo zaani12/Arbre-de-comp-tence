@@ -4,7 +4,6 @@ include "./loader.php";
 
 $StagiairesBLO = new StagiairesBLO;
 $Stagiaires = $StagiairesBLO->GetAllStagiaiers();
-
 $CityBLO = new CityBLO;
 
 ?>
@@ -23,7 +22,7 @@ $CityBLO = new CityBLO;
     <?php include_once "./Templates/Navbare.php"; ?>
 
     <div class="container">
-        <table class="table table-dark table-striped">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th scope="col">ID</th>
@@ -37,31 +36,30 @@ $CityBLO = new CityBLO;
             </thead>
             <tbody>
                 <?php foreach ($Stagiaires as $Stagiaire) { ?>
-                <tr>
-                    <th scope="row">
-                        <?= $Stagiaire->GetId() ?>
-                    </th>
-                    <th scope="row">
-                        <?= $Stagiaire->GetFullName() ?>
-                    </th>
-                    <th>
-                        <?= $Stagiaire->GetEmail() ?>
-                    </th>
-                    <th>
-                        <?= $Stagiaire->GetPhone_number() ?>
-                    </th>
-                    <th>
-                        <?= $Stagiaire->GetAddress() ?>
-                    </th>
-                    <th>
-                        <?= $CityBLO->getCityById($Stagiaire->GetIdCity()) ?>
-                    </th>
-                    <th>
-                        <a class="btn btn-danger" name="deleteStagiaire"
-                            href="Delete.php?Page=<?= $Stagiaire->GetId() ?>">Delete</a>
-                        <a class="btn btn-light" href="Update.php?Page=<?= $Stagiaire->GetId() ?>">Update</a>
-                    </th>
-                </tr>
+                    <tr>
+                        <th scope="row">
+                            <?= $Stagiaire->GetId() ?>
+                        </th>
+                        <th scope="row">
+                            <?= $Stagiaire->GetFullName() ?>
+                        </th>
+                        <th>
+                            <?= $Stagiaire->GetEmail() ?>
+                        </th>
+                        <th>
+                            <?= $Stagiaire->GetPhone_number() ?>
+                        </th>
+                        <th>
+                            <?= $Stagiaire->GetAddress() ?>
+                        </th>
+                        <th>
+                            <?= $CityBLO->getCityById($Stagiaire->GetIdCity()) ?>
+                        </th>
+                        <th>
+                            <a class="btn btn-danger" name="deleteStagiaire" href="Delete.php?Page=<?= $Stagiaire->GetId() ?>">Delete</a>
+                            <a class="btn btn-light" href="Update.php?Page=<?= $Stagiaire->GetId() ?>">Update</a>
+                        </th>
+                    </tr>
                 <?php } ?>
             </tbody>
         </table>

@@ -1,28 +1,39 @@
 <?php
-
 include "./loader.php";
 
+// Create instances of StagiairesBLO and CityBLO
 $StagiairesBLO = new StagiairesBLO;
-
 $CityBLO = new CityBLO;
+
+// Get all cities
 $Cities = $CityBLO->getAllCity();
 
+// Check if the form is submitted
 if (isset($_POST['AddStagiaire'])) {
 
+    // Get form data
     $FullName      = $_POST['FullName'];
     $Email         = $_POST['Email'];
     $PhoneNumber   = $_POST['PhoneNumber'];
     $Address       = $_POST['Address'];
     $City          = $_POST['City'];
 
+    // Create a new Stagiaires object
     $Stagiaires = new Stagiaires(0, $FullName, $Email, $PhoneNumber, $Address, $City);
+
+    // Add Stagiaires using StagiairesBLO
     $StagiairesBLO->AddStagiaiers($Stagiaires);
 
-    header("location:index.php");
+    // Check for errors
+    if (empty($StagiairesBLO->ErrorMasseg)) {
+        // Redirect to the index page if successful
+        header("location:index.php");
+    } else {
+        // Store errors if any
+        $Errors = $StagiairesBLO->ErrorMasseg;
+    }
 }
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -37,6 +48,22 @@ if (isset($_POST['AddStagiaire'])) {
 <body>
     <?php include_once "./Templates/Navbare.php"; ?>
     <div class="container">
+        <?php if (isset($Errors)) { ?>
+            <div class="alert alert-danger" role="alert">
+                <ul>
+                    <?php
+
+                    foreach ($Errors as $Error) {
+                    ?>
+                        <li><?= $Error ?></li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+            </div>
+        <?php } ?>
+
+
         <form method="POST">
             <div class="mb-3">
                 <label for="FullName" class="form-label">Full Name</label>
@@ -65,7 +92,9 @@ if (isset($_POST['AddStagiaire'])) {
                     </option>
                 <?php endforeach; ?>
             </select>
-            <button type="submit" name="AddStagiaire" class="btn btn-primary mt-3">Submit</button>
+            <button type="submit" name="AddStagiaire" class="btn btn-primary mt-3">Add</button>
+            <a href="index.php" class="btn btn-secondary mt-3">Cancel</a>
+
         </form>
     </div>
 

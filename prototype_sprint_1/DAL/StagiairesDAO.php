@@ -2,6 +2,11 @@
 
 class StagiairesDAO
 {
+
+    // ================================================================================= //
+    // ============================= Get All Stagiaiers ================================ //
+    // ================================================================================= //
+
     public function GetAllStagiaiers()
     {
         $sql = "SELECT * FROM `stagiaires`";
@@ -15,11 +20,12 @@ class StagiairesDAO
     }
 
 
+    // ================================================================================= //
+    // ================================= Add Stagiaiers ================================ //
+    // ================================================================================= //
+
     public function AddStagiaiers($Stagiaiers)
     {
-        // $sql = "INSERT "
-
-
         $sql = Connect::DB()->prepare("INSERT INTO stagiaires (`full_name`, `email`, `phone_number`, `address`, `idCity`) 
         VALUES (:FN, :Em, :Ph, :Ad ,:CT)");
         $fullName       = $Stagiaiers->GetFullName();
@@ -40,12 +46,19 @@ class StagiairesDAO
         return $lastInsertId;
     }
 
+    // ================================================================================= //
+    // =============================== Delete Stagiaiers =============================== //
+    // ================================================================================= //
+
     public function DeleteStagiaire($ID)
     {
         $sql = "DELETE FROM `stagiaires` WHERE `id` = $ID";
         Connect::DB()->query($sql);
     }
 
+    // ================================================================================= //
+    // ============================= get Stagiares By Id =============================== //
+    // ================================================================================= //
     public function getStagiaresById($ID)
     {
         $sql = "SELECT * FROM `stagiaires` WHERE `id` = $ID";
@@ -56,44 +69,88 @@ class StagiairesDAO
         return $Stagiaire;
     }
 
-         public function UpdateDataTrainee($Stagiaiers)
+    // ================================================================================= //
+    // ========================== Update Stagiares By Id =============================== //
+    // ================================================================================= //
+
+    public function UpdateTrainee($Stagiaiers)
     {
+        $updateQuery = "UPDATE stagiaires
+                            SET
+                                full_name = :full_name,
+                                email = :email,
+                                phone_number = :phone_number,
+                                address = :address,
+                                idCity = :idCity
+                            WHERE id = :id";
 
+        $stm = Connect::DB()->prepare($updateQuery);
 
+        $stm->bindValue(':full_name', $Stagiaiers->getFullName());
+        $stm->bindValue(':email', $Stagiaiers->getEmail());
+        $stm->bindValue(':phone_number', $Stagiaiers->GetPhone_number());
+        $stm->bindValue(':address', $Stagiaiers->GetAddress());
+        $stm->bindValue(':idCity', $Stagiaiers->GetIdCity());
+        $stm->bindValue(':id', $Stagiaiers->GetId());
 
-
-        $Update = "UPDATE stagiaires
-                    SET
-                    full_name='" . $Stagiaiers->GetFullName() . "',
-                        email='" . $Stagiaiers->GetEmail() . "',
-                        phone_number='" . $Stagiaiers->GetPhone_number() . "',
-                        address='" . $Stagiaiers->GetAddress() . "',
-                        idCity='" . $Stagiaiers->GetIdCity() . "'
-                    WHERE id=" . $Stagiaiers->GetId();
-
-        $stm = Connect::DB()->prepare($Update);
         $stm->execute();
+
         return $stm->rowCount();
-    } 
-
-    // ====================================validation============
+    }
 
 
-    // public function validateStagiaires($Stagiaires)
-    // {
-    //     $errors = [];
+    // ================================================================================= //
+    // ========================= VALIDATION required Input ============================= //
+    // ================================================================================= //
 
-    //     // Perform validation for each field in the Stagiaires object
-    //     if (empty($Stagiaires->GetFullName())) {
-    //         $errors['full_name'] = 'Full name is required.';
-    //     }
 
-    //     if (empty($Stagiaires->GetEmail()) || !filter_var($Stagiaires->GetEmail(), FILTER_VALIDATE_EMAIL)) {
-    //         $errors['email'] = 'Valid email is required.';
-    //     }
 
-    //     // Add more validation rules for other fields as needed
+    public function requiredInput($Stagiaiers)
+    {
+        $Errors = [];
+        if (empty($Stagiaiers->GetFullName())) {
+            $massegFullName = "full name is requird";
+            array_push($Errors, $massegFullName);
+        }
 
-    //     return $errors;
-    // }
+        if (empty($Stagiaiers->GetEmail())) {
+            $massegEmail = " Email is requird";
+            array_push($Errors, $massegEmail);
+        }
+
+        if (empty($Stagiaiers->GetPhone_number())) {
+            $massegPhoneNumber = " Phone Number  is requird";
+            array_push($Errors, $massegPhoneNumber);
+        }
+
+        if (empty($Stagiaiers->GetAddress())) {
+            $massegAdderss = " Address  is requird";
+            array_push($Errors, $massegAdderss);
+        }
+
+        return $Errors;
+    }
+
+    // ================================================================================= //
+    // ============================= VALIDATION Email  ================================= //
+    // ================================================================================= //
+
+    public function isEmailExists($email, $id, $email_exist)
+    {
+        if ($email_exist == false) {
+            $sql = "SELECT * FROM `stagiaires` WHERE `email` = :email";
+            $stm = Connect::DB()->prepare($sql);
+            $stm->bindValue(':email', $email);
+        } else {
+            $sql = "SELECT * FROM `stagiaires` WHERE `email` = :email AND `id` != :id ";
+            $stm = Connect::DB()->prepare($sql);
+            $stm->bindValue(':email', $email);
+            $stm->bindValue(':id', $id);
+        }
+
+
+        $stm->execute();
+        $result = $stm->fetchAll(PDO::FETCH_ASSOC);
+        return count($result) > 0 ? false : true;
+    }
 }

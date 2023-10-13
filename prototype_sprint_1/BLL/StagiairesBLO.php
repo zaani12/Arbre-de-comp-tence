@@ -3,23 +3,57 @@
 class StagiairesBLO
 {
 
+    public $ErrorMasseg = [];
     private $studentDao;
     public function __construct()
     {
         $this->studentDao = new StagiairesDAO();
     }
 
+    // ================================================================================= //
+    // ============================= Get All Stagiaiers ================================ //
+    // ================================================================================= //
+
     public function GetAllStagiaiers()
     {
         return $this->studentDao->GetAllStagiaiers();
     }
 
+    // ================================================================================= //
+    // ============================== Is Email Exists ================================== //
+    // ================================================================================= //
+
+    public function IsEmailExists($Email, $id, $email_exist)
+    {
+        return $this->studentDao->IsEmailExists($Email, $id, $email_exist);
+    }
+
+    // ================================================================================= //
+    // =============================== Add Stagiaiers ================================== //
+    // ================================================================================= //
 
     public function AddStagiaiers($Stagiaiers)
     {
-        return $this->studentDao->AddStagiaiers($Stagiaiers);
+        $requiredInput  = $this->studentDao->requiredInput($Stagiaiers);
+        if (empty($requiredInput)) {
+
+            if ($this->IsEmailExists($Stagiaiers->getEmail(), $Stagiaiers->GetId(), false)) {
+                return $this->studentDao->AddStagiaiers($Stagiaiers);
+            } else {
+                $ErrorMassegeEmailExists = "Error Massege Email Exists";
+                array_push($this->ErrorMasseg, $ErrorMassegeEmailExists);
+            }
+        } else {
+            foreach ($requiredInput as $Error) {
+                array_push($this->ErrorMasseg, $Error);
+                array_push($this->ErrorMasseg,);
+            }
+        }
     }
 
+    // ================================================================================= //
+    // ============================== Delete Stagiaire ================================= //
+    // ================================================================================= //
 
     public function DeleteStagiaire($ID)
     {
@@ -32,9 +66,26 @@ class StagiairesBLO
     }
 
 
-    public function UpdateDataTrainee($Stagiaiers)
+    // ================================================================================= //
+    // ============================== Update Stagiaire ================================= //
+    // ================================================================================= //
+
+    public function UpdateTrainee($Stagiaiers)
     {
-        return $this->studentDao->UpdateDataTrainee($Stagiaiers);
+
+        $requiredInput  = $this->studentDao->requiredInput($Stagiaiers);
+        if (empty($requiredInput)) {
+
+            if ($this->IsEmailExists($Stagiaiers->getEmail(), $Stagiaiers->GetId(), true)) {
+                return $this->studentDao->UpdateTrainee($Stagiaiers);
+            } else {
+                $ErrorMassegeEmailExists = "Error... Massege Email Exists";
+                array_push($this->ErrorMasseg, $ErrorMassegeEmailExists);
+            }
+        } else {
+            foreach ($requiredInput as $Error) {
+                array_push($this->ErrorMasseg, $Error);
+            }
+        }
     }
-    
 }

@@ -24,9 +24,15 @@ if (isset($_GET['Page'])) {
         $City          = $_POST['City'];
 
         $Stagiaires = new Stagiaires($ID, $FullName, $Email, $PhoneNumber, $Address, $City);
-        $StagiairesBLO->UpdateDataTrainee($Stagiaires);
+        $StagiairesBLO->UpdateTrainee($Stagiaires);
 
-        header("location:index.php");
+
+
+        if (empty($StagiairesBLO->ErrorMasseg)) {
+            header("location:index.php");
+        } else {
+            $Errors = $StagiairesBLO->ErrorMasseg;
+        }
     }
 }
 
@@ -46,6 +52,20 @@ if (isset($_GET['Page'])) {
 <body>
     <?php include_once "./Templates/Navbare.php"; ?>
     <div class="container">
+        <?php if (isset($Errors)) { ?>
+            <div class="alert alert-danger" role="alert">
+                <ul>
+                    <?php
+
+                    foreach ($Errors as $Error) {
+                    ?>
+                        <li><?= $Error ?></li>
+                    <?php
+                    }
+                    ?>
+                </ul>
+            </div>
+        <?php } ?>
         <form method="POST">
             <div class="mb-3">
                 <label for="FullName" class="form-label">Full Name</label>
@@ -68,13 +88,14 @@ if (isset($_GET['Page'])) {
 
             <label for="City" class="form-label">City : <?= $Stagiaires->GetIdCity() ?></label>
             <select class="form-select" name="City" id="City" aria-label="Default select example">
-                <option name="<?php echo $Stagiaires->GetIdCity() ?>">
+
+
+                <option value="<?php echo $Stagiaires->GetIdCity() ?>">
                     <?= $CityBLO->getCityById($Stagiaires->GetIdCity()) ?>
                 </option>
 
-                <?php
 
-                // $cityName =  $CityBLO->getCityById($Stagiaires->GetIdCity());
+                <?php
                 foreach ($Cities as $City) {
 
                     if ($Stagiaires->GetIdCity() !== $City->getIdCity()) {
@@ -88,7 +109,8 @@ if (isset($_GET['Page'])) {
                 ?>
 
             </select>
-            <button type="submit" name="btnUpdate" class="btn btn-primary mt-3">Submit</button>
+            <button type="submit" name="btnUpdate" class="btn btn-primary mt-3">Update</button>
+            <a href="index.php" class="btn btn-secondary mt-3">Cancel</a>
         </form>
     </div>
 

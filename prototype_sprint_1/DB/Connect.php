@@ -1,12 +1,17 @@
 <?php
 
 
+
+// ================================================================================= //
+// =========================== Connect To Databaese ================================ //
+// ================================================================================= //
+
 class Connect
 {
-  const SERVERNAME = "localhost:3306";
-  const DATABASNAME = "sprint1";
+  const SERVERNAME = "localhost";
+  const DATABASNAME = "sprint1db";
   const USERNAME = "root";
-  const PASSWORD = "admin";
+  const PASSWORD = "";
 
 
   public static function DB()
