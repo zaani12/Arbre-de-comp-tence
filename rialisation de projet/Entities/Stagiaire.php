@@ -1,7 +1,7 @@
 <?php
 
 
-class Stagiaires
+class Stagiaire
 {
     private $id;
     private $fullName;

@@ -186,14 +186,23 @@
 
 
   <section class="content">
-    <div class="container-fluid">
+    <div class="card">
       <!-- Small boxes (Stat box) -->
       <div class="card-header">
         <h3 class="card-title">management des Compétences</h3>
 
         <div class="card-tools">
+            <!-- <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+              <i class="fas fa-minus"></i>
+            </button> -->
+            <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+        <div class="card-tools">
           <div class="input-group input-group-sm" style="width: 150px;">
-           <a class="card-title btn btn-primary" href="Views/gestionCompetences/ajouterCompetences.php">Ajouter compétences</a>
+           <a  class="card-title btn btn-primary" href="Views/gestionCompetences/ajouterCompetences.php" > <span>&#43</span></a>
           </div>
         </div>
       </div>
